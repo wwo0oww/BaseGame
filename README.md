@@ -1,9 +1,13 @@
 # BaseGame
 简介：服务端以开源项目cellnet为基础进行二次开发，前端使用开源项目mine修改
+
 服务端：
-  语言、环境：go +mysql
+
+  环境：go +mysql
+  
 前端：
-  语言环境：unity3d C#
+
+  环境：unity3d C#
   
 协议格式：protobuf
  
