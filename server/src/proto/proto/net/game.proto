@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package net;
+option  go_package = "proto/net";
+
+/** 
+ * @brief game
+ */
+
+message p_position{
+    int32 X = 1;  // x 坐标
+    int32 Y = 2;  // y 坐标
+}
+
+message p_player{
+    string       PlayerID = 1;                      // 用户id
+    p_position   Position = 2;                     // 坐标
+}

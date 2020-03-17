@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package rpc;
+option  go_package = "rpc";
+import "net/game.proto";
+
+/** 
+ * @brief map msg
+ */
+message p_map_msg{
+        net.p_player   Player = 1;            // 用戶信息
+        int32          msg_id = 2;            // 消息id
+        bytes          Data = 3;              // 数据
+}

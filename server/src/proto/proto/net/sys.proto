@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package net;
+
+
+/** 
+ * @brief base_score_info
+ */
+
+message m_heartbeat_tos{
+}
+
+message m_heartbeat_toc{
+    int32 timestamp = 1; // 服务端的时间
+}

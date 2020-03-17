@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package rpc;
+
+/** 
+ * @brief base_score_info
+ */
+message TestEchoACK{
+        string      Msg = 1;                       // 用户名
+        int32      Value = 2;                 // 玩家负局局数
+}

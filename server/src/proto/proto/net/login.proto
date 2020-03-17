@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package net;
+
+
+/** 
+ * @brief base_score_info
+ */
+
+message TestEchoACK{
+        string      Msg = 1;                       // 用户名
+        int32      Value = 2;                      // 玩家负局局数
+}
+
+message m_login_tos{
+    int32      op = 1;                          // 1 登录 2 注册
+    string      Name = 2;                       // 用户名
+    string      Pwd = 3;                        // 密码
+}
+
+message m_login_toc{
+    int32 op = 1; // 1 登录 2 注册
+    int32 errcode = 2; // 错误码
+}
