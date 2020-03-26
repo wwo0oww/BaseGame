@@ -1,5 +1,5 @@
-cd proto/net
-protoc --csharp_out=../../net *.proto
-cd ../rpc
-protoc --csharp_out=../../rpc *.proto
-cp ../../net/*.cs E:/code/mine/MinePackage-master/Assets/Scripts/Proto
+
+protoc --csharp_out=./net ./proto/net/*.proto
+
+##protoc --csharp_out=./rpc ./proto/net/rpc/*.proto
+cp ./net/*.cs F:/code/golang/client/MinePackage-master/Assets/Scripts/Proto

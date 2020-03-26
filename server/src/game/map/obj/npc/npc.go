@@ -4,6 +4,14 @@ import (
 	"game/core"
 )
 
+//npc类型
+type NPCType int32
+
+const (
+	NPC_PLAYER NPCType = 1
+	NPC_TEST NPCType = 2
+)
+
 type IMNPC interface {
 	ToString() string
 	GetPos() core.Position

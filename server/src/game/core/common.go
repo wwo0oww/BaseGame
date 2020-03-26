@@ -8,17 +8,20 @@ import (
 type Position struct {
 	X int32
 	Y int32
+	Z int32
 }
 
 type DIRECTION int32
 
 const (
 	DIRECTION_NONE DIRECTION = iota
-	DIRECTION_RIGHT
 	DIRECTION_LEFT
+	DIRECTION_RIGHT
 	DIRECTION_UP
 	DIRECTION_DOWN
+	DIRECTION_STOP
 )
+const DirectionNum = 6
 
 var Directions = []DIRECTION{DIRECTION_RIGHT, DIRECTION_LEFT, DIRECTION_UP, DIRECTION_DOWN}
 
@@ -34,7 +37,10 @@ func AbsInt32(a, b int32) int32 {
 	return -a
 }
 
-func GetObjAreaPos(pos Position) Position {
+func GetAreaPosByGPos(pos Position) Position {
+	if pos.X < 0 || pos.Y < 0 {
+		return Position{X: -1, Y: -1}
+	}
 	size := config.GetAreaSize()
-	return Position{X: pos.X / size, Y: pos.X / size}
+	return Position{X: pos.X / size, Y: pos.Y / size}
 }

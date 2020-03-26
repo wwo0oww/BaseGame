@@ -27,7 +27,7 @@ func GetMapNodeName() string {
 }
 
 func GetMapWH() (int32, int32) {
-	return 100, 100
+	return 2, 2
 }
 
 func MaxMapWorldX() int32 {
@@ -41,10 +41,18 @@ func MaxMapWorldY() int32 {
 }
 
 func GetAreaSize() int32 {
-	return 100
+	return 20
 }
 
 // 必须是 GetMapWH()的W*H的整数倍
 func GetSingleThreadAreaNum() int {
-	return 20
+	return 2
+}
+
+func GetMapFrame() int{
+	return 20;
+}
+
+func MapShowSize() (int32,int32){
+	return 50,50
 }

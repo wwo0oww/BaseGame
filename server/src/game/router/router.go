@@ -5,6 +5,7 @@ import (
 	"game/client"
 	"game/heartbeat"
 	"game/login"
+	emap "game/map"
 	"lib/cellnet"
 	"proto/net"
 )
@@ -18,6 +19,8 @@ func Router(ev cellnet.Event) {
 		fmt.Println("client connected")
 	case *net.MLoginTos:
 		login.Handle(*(ev.Message()).(*net.MLoginTos), client)
+	case *net.MObjMoveTos:
+		emap.Handle(*(ev.Message()).(*net.MObjMoveTos), client)
 	case *net.MHeartbeatTos:
 		heartbeat.Handle(*(ev.Message()).(*net.MHeartbeatTos), client)
 	default:

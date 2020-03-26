@@ -27,6 +27,11 @@ func init() {
 	Add((*net.MLoginToc)(nil))
 	Add((*net.MHeartbeatTos)(nil))
 	Add((*net.MHeartbeatToc)(nil))
+	Add((*net.MObjUpdateToc)(nil))
+	Add((*net.MMapInfoToc)(nil))
+	Add((*net.MMapPlayerToc)(nil))
+	Add((*net.MObjMoveToc)(nil))
+	Add((*net.MObjMoveTos)(nil))
 	Add((*rpc.PMapMsg)(nil))
 }
 

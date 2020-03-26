@@ -69,18 +69,39 @@ func (self *Map) initLoop() {
 func (self *Map) startLoop() {
 	var a []int32
 	self.loopGroup.Wait()
+	var t1, t2, t3 int
+	t1 = 0
+	t2 = 0
+	nFrame := config.GetMapFrame()
 	for {
+		self.FrameAdd()
+
 		a = a[0:0]
-		time.Sleep(time.Second/20)
-		for index, _ := range self.loopSync {
-			if self.loopSync[index].WaitStatus == WAITSTATUSTYPE_DONE {
-				self.loopSync[index].WaitCond.Signal()
+		t1 = time.Now().Nanosecond()
+		if t1-t2 == 0 {
+			t3 = (int)(time.Second) / nFrame
+		} else {
+			t3 = (int)(time.Second)/nFrame - (t1 - t2)
+		}
+		if t1-t2 != 0 {
+			log.Debug("xx:", t1-t2)
+		}
+		if n := self.GetFrame(); n%10 == 0 {
+
+			//log.Debug("frame ",n)
+		}
+		time.Sleep((time.Duration)(t3))
+		t2 = time.Now().Nanosecond()
+		for index, item := range self.loopSync {
+			item.MapFrame = self.GetFrame()
+			if item.WaitStatus == WAITSTATUSTYPE_DONE {
+				item.WaitCond.Signal()
 			} else { // 进入这个分支有2种情况 1.被唤醒B事件未完成， 2.事件完成了WaitStatus 已经变为了 WAITSTATUSTYPE_DONE，但是还未进入等待状态，概率极小
-				if self.loopSync[index].WaitStatus != WAITSTATUSTYPE_FROZEN {
-					self.loopSync[index].WaitCond.Signal() //处理情况2：当前B，被唤醒B： 处理 唤醒A时，A未处于等待状态
+				if item.WaitStatus != WAITSTATUSTYPE_FROZEN {
+					item.WaitCond.Signal() //处理情况2：当前B，被唤醒B： 处理 唤醒A时，A未处于等待状态
 					a = append(a, index)
 					log.Debug("no finished %d", index)
-					self.loopSync[index].WaitRelayFrame++
+					item.WaitRelayFrame++
 				}
 			}
 		}
@@ -117,6 +138,7 @@ func (self *Map) doLoopArea(areas []*area.Area, loopSync *LoopSync, nCount int32
 			return
 		}
 		for _, area := range areas {
+			area.MapFrame = loopSync.MapFrame
 			area.RelayFrame(loopSync.WaitRelayFrame)
 			area.LoopRecMsg()
 			area.Running()

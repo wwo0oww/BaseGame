@@ -12,7 +12,13 @@ type Pipe struct {
 }
 
 func (self *Pipe) GetList() []interface{} {
-	return self.list
+	self.listGuard.Lock()
+	var buf []interface{}
+	for _, item := range self.list {
+		buf = append(buf, item)
+	}
+	self.listGuard.Unlock()
+	return buf
 }
 
 // 添加时不会发送阻塞

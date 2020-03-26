@@ -9,6 +9,7 @@ type Client struct {
 	session    cellnet.Session
 	status     int32
 	Heartindex int32
+	PlayerPr   interface{}
 }
 
 func (self *Client) Session() cellnet.Session {

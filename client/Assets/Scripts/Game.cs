@@ -11,25 +11,26 @@ public enum GameStatus {
 }
 
 public class Game : MonoBehaviour {
-    public static int nFrame = 60;
+    public static int nFrame = 80;
+    public static int nServerFrame = 20;// 后端为1s 20帧
     public bool Debug = true;
     public static Game Instance;
     public static int nDurFrame = 6;
-   
+    public static int SinglePlayer = 0;// 0 联网 1 单机
     private GameStatus m_status;
+    void Awake()
+    {
+        Instance = this;
+        Application.targetFrameRate = nFrame;
+
+    }
 	// Use this for initialization
 	void Start () {
-        Instance = this;
-        Status = GameStatus.None;
 
         InitTestLog();
 
     }
 
-    void Awake() {
-        Application.targetFrameRate = nFrame;
-
-    }
 
 	// Update is called once per frame
 	void Update () {
@@ -39,13 +40,13 @@ public class Game : MonoBehaviour {
     void InitTestLog()
     {
         var LogInfo = GameObject.Find("ShowTab/LogInfo").gameObject;
-        Objmgr.Register("LogInfo", LogInfo);
+        GameObjmgr.Register("LogInfo", LogInfo);
     }
 
     public GameStatus Status
     {
         get { return m_status; }
-        set { m_status = value; }
+        set {m_status = value; }
     }
 
     public static void Log<T>(T log)
@@ -57,7 +58,7 @@ public class Game : MonoBehaviour {
     {
         if (Game.Instance.Debug)
         {
-            Text text = Objmgr.GetObjByName("LogInfo").GetComponent<Text>();
+            Text text = GameObjmgr.GetObjByName("LogInfo").GetComponent<Text>();
             text.text += "\n"+System.DateTime.Now + ":"+ log;
         }
     }

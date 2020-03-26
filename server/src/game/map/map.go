@@ -1,6 +1,7 @@
 package emap
 
 import (
+	"fmt"
 	"game/config"
 	"game/core"
 	"game/map/area"
@@ -36,8 +37,14 @@ const (
 	WAITSTATUSTYPE_FROZEN
 )
 
+type IPlayer interface {
+	SendMsgToMap(Msg interface{})
+	GetPlayerID() int32
+}
+
 type LoopSync struct {
 	WaitStatus     int32
+	MapFrame       uint32
 	WaitRelayFrame int32
 	WaitCond       *sync.Cond
 	WaitGurad      sync.Mutex
@@ -45,7 +52,7 @@ type LoopSync struct {
 
 type Map struct {
 	// 玩家到地图映射
-	PlayerMapping map[string]interface{}
+	PlayerMapping *core.SMap
 
 	players [] *obj.Obj
 	// 发送队列
@@ -70,6 +77,9 @@ type Map struct {
 	loopSync map[int32]*LoopSync
 	//
 	loopGroup sync.WaitGroup
+
+	// 当前帧数
+	nFrameCount uint32
 }
 
 func GetMapInstance() *Map {
@@ -80,13 +90,39 @@ func GetMapInstance() *Map {
 }
 
 func newMap() *Map {
-	m_map = &Map{sendQueue: cellnet.NewPipe(), recQueue: cellnet.NewPipe()}
+	m_map = &Map{
+		sendQueue:     cellnet.NewPipe(),
+		recQueue:      cellnet.NewPipe(),
+		PlayerMapping: core.NewSMap()}
 	m_map.Start()
+	mMsg.Map = m_map
 	return m_map
 }
 
 func (self *Map) ToString() string {
 	return "map"
+}
+
+func (self *Map) GetAreas() map[int32]map[int32]*area.Area {
+	return self.areas
+}
+
+func (self *Map) GetPlayer2Map() *core.SMap {
+	return self.PlayerMapping
+}
+
+func (self *Map) AddPlayer2Map(ObjID int32, area *area.Area) (BHas bool) {
+	if self.PlayerMapping.Get(ObjID) == nil {
+		BHas = false
+	} else {
+		BHas = true
+	}
+	self.PlayerMapping.Add(ObjID, area)
+	return
+}
+
+func (self *Map) DelPlayer4Map(ObjID int32) {
+	//todo 因为player总是从一个area移动到另外一个area,目前 不错处理【以后出现player不积极等情况，从地图移除再做处理】
 }
 
 func (self *Map) sendLoop() {
@@ -99,7 +135,7 @@ func (self *Map) sendLoop() {
 
 		// 遍历要发送的数据
 		for _, msg := range writeList {
-			self.SendMessage(msg)
+			self.SendMsgToMap(msg)
 		}
 
 		if exit {
@@ -118,13 +154,10 @@ func (self *Map) recvLoop() {
 	for {
 		writeList = writeList[0:0]
 		exit := self.recQueue.Pick(&writeList)
-
 		// 遍历要处理的数据
 		for _, msg := range writeList {
 			self.DispatchMsg(msg)
 		}
-		/// 将map分为多个区域，根据具体map的长W 宽H 分配具体的层数，如单位区域的长宽为4*4，每次下面只有4个,总大小为64*64，则有
-		/// 4。根据player进程玩家的position找到具体的，map位置
 		if exit {
 			break
 		}
@@ -165,7 +198,7 @@ func (self *Map) Start() {
 
 	go func() {
 		for {
-			time.Sleep(time.Second * 1)
+			time.Sleep(time.Second * 20)
 			nCount := 0
 			for i, _ := range self.areas {
 				for j, _ := range self.areas[i] {
@@ -179,6 +212,14 @@ func (self *Map) Start() {
 			log.Debug(self.ToString(), " total obj:", nCount)
 		}
 	}()
+}
+
+func (self *Map) FrameAdd() {
+	atomic.AddUint32(&self.nFrameCount, 1)
+}
+
+func (self *Map) GetFrame() uint32 {
+	return atomic.LoadUint32(&self.nFrameCount)
 }
 
 func (self *Map) Close() {
@@ -197,7 +238,7 @@ func (self *Map) AddMessage(data interface{}) {
 }
 
 func (self *Map) SendMessage(msg interface{}) {
-	//todo
+	self.sendQueue.Add(msg)
 }
 
 func (self *Map) DispatchMsg(raw interface{}) {
@@ -206,42 +247,84 @@ func (self *Map) DispatchMsg(raw interface{}) {
 		return
 	}
 	pos := msg.(mMsg.IMapMsg).GetAreaPos()
-	x, y := config.GetMapWH()
-	if pos.X >= x || pos.Y >= y {
-		log.Debug("map to area error ", pos.X, pos.Y)
+
+	if self.areas[pos.X][pos.Y] == nil {
 		return
 	}
 	self.areas[pos.X][pos.Y].AddMsg(msg)
 }
 
-func (self *Map) GetAreas() map[int32]map[int32]*area.Area {
-	return self.areas
+func (self *Map) GetPlayer() {}
+
+func (self *Map) GetArea(x, y int32) interface{} {
+	W, H := config.GetMapWH()
+	if x >= W || y >= H || x < 0 || y < 0 {
+		return nil
+	}
+	return self.areas[x][y]
+}
+func (self *Map) Test() map[int32]core.Position {
+	return testmap
 }
 
+var testmap map[int32]core.Position
+
 func Test() {
-	go func() {
-		var nCount int32
-		for {
-			nCount++
-			time.Sleep(time.Second)
-			println("do_",nCount)
-		}
-	}()
-	go func() {
-		for {
-			time.Sleep(time.Second)
-			println(len(GetMapInstance().GetRecQueue().GetList()))
-		}
-	}()
-	for i := 0; i < 100; i++ {
-		log.Debug("add 500")
-		for j := 0; j < 100; j++ {
+	testmap = make(map[int32]core.Position)
+	//go func() {
+	//	var nCount int32
+	//	for {
+	//		nCount++
+	//		time.Sleep(time.Second)
+	//		println("do_",nCount)
+	//	}
+	//}()
+	//go func() {
+	//	for {
+	//		time.Sleep(time.Second)
+	//		println(len(GetMapInstance().GetRecQueue().GetList()))
+	//	}
+	//}()
+	w, h := config.GetMapWH()
+	pos := core.Position{X: config.GetAreaSize() * w / 2, Y: config.GetAreaSize() * h / 2}
+	//var i, j int32
+	//var size, size1 int32
+	//size = 5
+	//size1 = size/2 + 1
+	//for i = 0; i < (config.GetAreaSize()*w/size)-1; i++ {
+	//	for j = 0; j < (config.GetAreaSize()*h/size)-1; j++ {
+	//		if i != 0 && j != 0 {
+	//			continue
+	//		}
+	//		pos1 := core.Position{X: i*size + size1, Y: j*size + size1}
+	//		Id := obj.GetMaxObj()
+	//		NewObj := &obj.Obj{
+	//			ObjID: Id,
+	//			Type:  obj.OBJTYPE_NPC,
+	//			Size:  core.Position{X: size, Y: size},
+	//			Pos:   pos1}
+	//		GetMapInstance().Test()[Id] = pos1
+	//		NewObj.SetSpeed(1)
+	//		GetMapInstance().AddMessage(&mMsg.JoinObj{
+	//			Obj:   NewObj,
+	//			Times: 10})
+	//
+	//	}
+	//}
+	for i := 0; i < 1; i++ {
+		var j int32
+		for j = -1; j < 1; j++ {
+			pos1 := core.Position{X: pos.X + 5, Y: pos.Y + j*5}
+			Id := obj.GetMaxObj()
 			NewObj := &obj.Obj{
-				ObjID: obj.GetMaxObj(),
+				ObjID: Id,
+				Type:  obj.T_OBJ.NPC().TEST().Value(),
+				Name:  fmt.Sprintf("路人%d", Id),
 				Size:  core.Position{X: 5, Y: 5},
-				Pos:   core.Position{X: int32(i), Y: int32(i)}}
+				Pos:   pos1}
+			GetMapInstance().Test()[Id] = pos1
 			NewObj.SetDirection(core.Directions[rand.Intn(4)])
-			NewObj.SetSpeed(2)
+			NewObj.SetSpeed(1)
 			GetMapInstance().AddMessage(&mMsg.JoinObj{
 				Obj:   NewObj,
 				Times: 10})
@@ -260,7 +343,6 @@ func init() {
 	GetMapInstance()
 	go func() {
 		time.Sleep(time.Second)
-		log.Debug("test")
 		Test()
 	}()
 }

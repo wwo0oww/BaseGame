@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class Common {
-    public  delegate void DelayEvent();
-    public static void Delay(int time,DelayEvent even) {
+public class Common
+{
+    public delegate void DelayEvent();
+    public static void Delay(int time, DelayEvent even)
+    {
         Thread.Sleep(time);
         even();
     }
 
+    public static Vector3 GetLocalPos(Net.p_position pos)
+    {
+        return new Vector3(pos.X / 10.0f, 0, pos.Y / 10.0f);
+    }
 
     /// <summary>
     /// 两个点的角度
@@ -69,8 +75,19 @@ public class Common {
     /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <returns></returns>
-    public static void NewThread(ThreadStart func ) {
+    public static void NewThread(ThreadStart func)
+    {
         Thread thr = new Thread(func);
         thr.Start();
+    }
+
+    public static T GetOrCreateComponent<T>(GameObject gameObject) where T : Component
+    {
+        T component = gameObject.GetComponent<T>();
+        if (component == null)
+        {
+            component = gameObject.AddComponent<T>();
+        }
+        return component;
     }
 }

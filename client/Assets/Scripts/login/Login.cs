@@ -17,20 +17,20 @@ public class Login : MonoBehaviour
     }
     static STATUS status = STATUS.LOGIN;
     static int errorCode = 0;
-    public GameObject mainSc;
-    public static GameObject MainSc; //todo 使用gameobject.find方法一直找不到main，先暂时通过ui界面获取
+    public GameObject mapSc;
+    public GameObject errorObj;
+    public static GameObject MapSc; //todo 使用gameobject.find方法一直找不到main，先暂时通过ui界面获取
 
     void Start()
     {
-        MainSc = mainSc;
-        Common.NewThread(() => { while (!Game.Instance) ; Game.Instance.Status = GameStatus.Login; });
-
+        MapSc = mapSc;
+        Game.Instance.Status = GameStatus.Login;
         // 注册obj
         GameObject root = GameObject.Find("Login");
         var loginError = root.transform.Find("Login/Error").gameObject;
-        Objmgr.Register("loginError", loginError);
+        GameObjmgr.Register("loginError", loginError);
         var regError = root.transform.Find("Register/Error").gameObject;
-        Objmgr.Register("regError", regError);
+        GameObjmgr.Register("regError", regError);
 
         //注册按钮
         var btn = root.transform.Find("Login/Button").GetComponent<Button>();
@@ -67,10 +67,10 @@ public class Login : MonoBehaviour
         switch (status)
         {
             case STATUS.LOGIN:
-                Objmgr.GetObjByName("loginError").GetComponent<Text>().text = error;
+                GameObjmgr.GetObjByName("loginError").GetComponent<Text>().text = error;
                 break;
             case STATUS.REG:
-                Objmgr.GetObjByName("regError").GetComponent<Text>().text = error;
+                GameObjmgr.GetObjByName("regError").GetComponent<Text>().text = error;
                 break;
         }
     }
@@ -169,6 +169,7 @@ public class Login : MonoBehaviour
 
     public static void Handler(IMessage msg)
     {
+        Debug.Log(msg);
         m_login_toc toc = msg as m_login_toc;
         Debug.Log(toc);
         if (toc.Errcode != 0)
@@ -183,8 +184,7 @@ public class Login : MonoBehaviour
         else
         {
             GameObject.Find("Root/Login").gameObject.SetActive(false);
-            MainSc.SetActive(true);
-            MainSc.transform.Find("World").gameObject.SetActive(true);
+            MapSc.SetActive(true);
             Game.Instance.Status = GameStatus.Game;
 
         }

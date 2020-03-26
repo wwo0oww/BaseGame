@@ -2,6 +2,7 @@ package login
 
 import (
 	"game/client"
+	"game/core"
 	"game/db"
 	mMsg "game/map/msg"
 	"game/map/obj"
@@ -34,7 +35,7 @@ func do_login(tos net.MLoginTos, client *client.Client) {
 	if account == "" {
 		client.Session().Send(&net.MLoginToc{
 			Op:      tos.Op,
-			Errcode: proto.LOGIN_ERROR_3,
+			Errcode: proto.LOGIN_ERROR_1,
 		})
 	} else {
 		client.Session().Send(&net.MLoginToc{
@@ -42,10 +43,16 @@ func do_login(tos net.MLoginTos, client *client.Client) {
 			Errcode: proto.NORMORL,
 		})
 		player := player.NewPlayer(UserID)
-		player.SendMsgToMap(&mMsg.JoinObj{Obj: &obj.Obj{
-			ObjID: player.Player_id,
-			Pos:   player.Pos,
-			Type:  obj.OBJTYPE_PLAYER},
+		player.SetClient(client)
+		obj := &obj.Obj{
+			ObjID:      player.Player_id,
+			Pos:        player.Pos,
+			Size:       core.Position{X: 5, Y: 5},
+			PlayerFlag: 1,
+			Name:       account,
+			Type:       obj.T_OBJ.NPC().Player().Value()}
+		obj.SetSpeed(1)
+		player.SendMsgToMap(&mMsg.JoinObj{Obj: obj,
 			Times: 10})
 	}
 

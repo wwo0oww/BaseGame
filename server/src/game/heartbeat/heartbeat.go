@@ -8,7 +8,9 @@ import (
 	"proto/net"
 	"time"
 )
+
 func Handle(_ net.MHeartbeatTos, client *client.Client){
+
 	client.Heartindex++
 }
 
@@ -20,12 +22,12 @@ func Start(client *client.Client){
 			if client.Session() == nil {
 				break
 			}
-			go checkheart(client)
+			go checkHeart(client)
 		}
 	}()
 }
 
-func checkheart(client *client.Client){
+func checkHeart(client *client.Client){
 	if client.Heartindex == 0{
 		client.Stop( errors.New(fmt.Sprintf("no receive heartbeat more than %d",config.HeartBeat)))
 	}

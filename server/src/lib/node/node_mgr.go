@@ -5,4 +5,6 @@ package node
 func (self*Node)SendMsgToMapNode(Msg interface{}){
 	//todo
 }
-
+func (self*Node)SendMsgToGameNode(Msg interface{}){
+	//todo
+}

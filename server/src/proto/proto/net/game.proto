@@ -16,3 +16,44 @@ message p_player{
     string       PlayerID = 1;                      // 用户id
     p_position   Position = 2;                     // 坐标
 }
+
+message p_obj{
+    int32   id          = 1;      // obj id
+    int32   type        = 2;      // obj id
+    string  name        = 3;
+    p_position pos      = 4;
+    int32   status      = 5;
+    int32   direction   = 6;
+    int32   speed       = 7;
+}
+
+
+message m_obj_move_tos{
+     int32 direction = 1; // 方向
+ }
+
+ //，除了一开始进入地图时objs的状态初始化， 移动状态变化主要用这个协议
+  message m_obj_move_toc{
+      int32 obj_id = 1;
+          int32 direction = 2; // 方向
+          p_position pos = 3;
+  }
+
+message m_map_player_toc{
+    p_obj    obj_info        = 3;      // obj信息
+}
+
+// 地图信息更新
+message m_obj_update_toc{
+    int32    type            = 1;      // 1 增加 2 更新 3 删除
+    repeated p_obj    obj_info        = 3;      // obj信息
+}
+
+// 进入地图初始化信息
+message m_map_info_toc{
+    uint32 frame_count = 1;  //当前map的frame值，用于断线重连等
+    repeated p_obj    obj_info        = 3;      // obj信息
+}
+
+
+

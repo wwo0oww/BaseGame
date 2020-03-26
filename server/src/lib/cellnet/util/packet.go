@@ -3,7 +3,6 @@ package util
 import (
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"lib/cellnet"
 	"lib/cellnet/codec"
 	"io"
@@ -81,7 +80,6 @@ func SendLTVPacket(writer io.Writer, ctx cellnet.ContextSet, data interface{}) e
 		msgID   int
 		meta    *cellnet.MessageMeta
 	)
-	fmt.Println(data)
 	switch m := data.(type) {
 	case *cellnet.RawPacket: // 发裸包
 		msgData = m.MsgData

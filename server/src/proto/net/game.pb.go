@@ -114,9 +114,332 @@ func (m *PPlayer) GetPosition() *PPosition {
 	return nil
 }
 
+type PObj struct {
+	Id                   int32      `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Type                 int32      `protobuf:"varint,2,opt,name=type,proto3" json:"type,omitempty"`
+	Name                 string     `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Pos                  *PPosition `protobuf:"bytes,4,opt,name=pos,proto3" json:"pos,omitempty"`
+	Status               int32      `protobuf:"varint,5,opt,name=status,proto3" json:"status,omitempty"`
+	Direction            int32      `protobuf:"varint,6,opt,name=direction,proto3" json:"direction,omitempty"`
+	Speed                int32      `protobuf:"varint,7,opt,name=speed,proto3" json:"speed,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *PObj) Reset()         { *m = PObj{} }
+func (m *PObj) String() string { return proto.CompactTextString(m) }
+func (*PObj) ProtoMessage()    {}
+func (*PObj) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad8b26ed7a5e6aa6, []int{2}
+}
+
+func (m *PObj) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PObj.Unmarshal(m, b)
+}
+func (m *PObj) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PObj.Marshal(b, m, deterministic)
+}
+func (m *PObj) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PObj.Merge(m, src)
+}
+func (m *PObj) XXX_Size() int {
+	return xxx_messageInfo_PObj.Size(m)
+}
+func (m *PObj) XXX_DiscardUnknown() {
+	xxx_messageInfo_PObj.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PObj proto.InternalMessageInfo
+
+func (m *PObj) GetId() int32 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+func (m *PObj) GetType() int32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
+func (m *PObj) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *PObj) GetPos() *PPosition {
+	if m != nil {
+		return m.Pos
+	}
+	return nil
+}
+
+func (m *PObj) GetStatus() int32 {
+	if m != nil {
+		return m.Status
+	}
+	return 0
+}
+
+func (m *PObj) GetDirection() int32 {
+	if m != nil {
+		return m.Direction
+	}
+	return 0
+}
+
+func (m *PObj) GetSpeed() int32 {
+	if m != nil {
+		return m.Speed
+	}
+	return 0
+}
+
+type MObjMoveTos struct {
+	Direction            int32    `protobuf:"varint,1,opt,name=direction,proto3" json:"direction,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MObjMoveTos) Reset()         { *m = MObjMoveTos{} }
+func (m *MObjMoveTos) String() string { return proto.CompactTextString(m) }
+func (*MObjMoveTos) ProtoMessage()    {}
+func (*MObjMoveTos) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad8b26ed7a5e6aa6, []int{3}
+}
+
+func (m *MObjMoveTos) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MObjMoveTos.Unmarshal(m, b)
+}
+func (m *MObjMoveTos) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MObjMoveTos.Marshal(b, m, deterministic)
+}
+func (m *MObjMoveTos) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MObjMoveTos.Merge(m, src)
+}
+func (m *MObjMoveTos) XXX_Size() int {
+	return xxx_messageInfo_MObjMoveTos.Size(m)
+}
+func (m *MObjMoveTos) XXX_DiscardUnknown() {
+	xxx_messageInfo_MObjMoveTos.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MObjMoveTos proto.InternalMessageInfo
+
+func (m *MObjMoveTos) GetDirection() int32 {
+	if m != nil {
+		return m.Direction
+	}
+	return 0
+}
+
+//，除了一开始进入地图时objs的状态初始化， 移动状态变化主要用这个协议
+type MObjMoveToc struct {
+	ObjId                int32      `protobuf:"varint,1,opt,name=obj_id,json=objId,proto3" json:"obj_id,omitempty"`
+	Direction            int32      `protobuf:"varint,2,opt,name=direction,proto3" json:"direction,omitempty"`
+	Pos                  *PPosition `protobuf:"bytes,3,opt,name=pos,proto3" json:"pos,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *MObjMoveToc) Reset()         { *m = MObjMoveToc{} }
+func (m *MObjMoveToc) String() string { return proto.CompactTextString(m) }
+func (*MObjMoveToc) ProtoMessage()    {}
+func (*MObjMoveToc) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad8b26ed7a5e6aa6, []int{4}
+}
+
+func (m *MObjMoveToc) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MObjMoveToc.Unmarshal(m, b)
+}
+func (m *MObjMoveToc) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MObjMoveToc.Marshal(b, m, deterministic)
+}
+func (m *MObjMoveToc) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MObjMoveToc.Merge(m, src)
+}
+func (m *MObjMoveToc) XXX_Size() int {
+	return xxx_messageInfo_MObjMoveToc.Size(m)
+}
+func (m *MObjMoveToc) XXX_DiscardUnknown() {
+	xxx_messageInfo_MObjMoveToc.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MObjMoveToc proto.InternalMessageInfo
+
+func (m *MObjMoveToc) GetObjId() int32 {
+	if m != nil {
+		return m.ObjId
+	}
+	return 0
+}
+
+func (m *MObjMoveToc) GetDirection() int32 {
+	if m != nil {
+		return m.Direction
+	}
+	return 0
+}
+
+func (m *MObjMoveToc) GetPos() *PPosition {
+	if m != nil {
+		return m.Pos
+	}
+	return nil
+}
+
+type MMapPlayerToc struct {
+	ObjInfo              *PObj    `protobuf:"bytes,3,opt,name=obj_info,json=objInfo,proto3" json:"obj_info,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MMapPlayerToc) Reset()         { *m = MMapPlayerToc{} }
+func (m *MMapPlayerToc) String() string { return proto.CompactTextString(m) }
+func (*MMapPlayerToc) ProtoMessage()    {}
+func (*MMapPlayerToc) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad8b26ed7a5e6aa6, []int{5}
+}
+
+func (m *MMapPlayerToc) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MMapPlayerToc.Unmarshal(m, b)
+}
+func (m *MMapPlayerToc) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MMapPlayerToc.Marshal(b, m, deterministic)
+}
+func (m *MMapPlayerToc) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MMapPlayerToc.Merge(m, src)
+}
+func (m *MMapPlayerToc) XXX_Size() int {
+	return xxx_messageInfo_MMapPlayerToc.Size(m)
+}
+func (m *MMapPlayerToc) XXX_DiscardUnknown() {
+	xxx_messageInfo_MMapPlayerToc.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MMapPlayerToc proto.InternalMessageInfo
+
+func (m *MMapPlayerToc) GetObjInfo() *PObj {
+	if m != nil {
+		return m.ObjInfo
+	}
+	return nil
+}
+
+// 地图信息更新
+type MObjUpdateToc struct {
+	Type                 int32    `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`
+	ObjInfo              []*PObj  `protobuf:"bytes,3,rep,name=obj_info,json=objInfo,proto3" json:"obj_info,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MObjUpdateToc) Reset()         { *m = MObjUpdateToc{} }
+func (m *MObjUpdateToc) String() string { return proto.CompactTextString(m) }
+func (*MObjUpdateToc) ProtoMessage()    {}
+func (*MObjUpdateToc) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad8b26ed7a5e6aa6, []int{6}
+}
+
+func (m *MObjUpdateToc) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MObjUpdateToc.Unmarshal(m, b)
+}
+func (m *MObjUpdateToc) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MObjUpdateToc.Marshal(b, m, deterministic)
+}
+func (m *MObjUpdateToc) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MObjUpdateToc.Merge(m, src)
+}
+func (m *MObjUpdateToc) XXX_Size() int {
+	return xxx_messageInfo_MObjUpdateToc.Size(m)
+}
+func (m *MObjUpdateToc) XXX_DiscardUnknown() {
+	xxx_messageInfo_MObjUpdateToc.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MObjUpdateToc proto.InternalMessageInfo
+
+func (m *MObjUpdateToc) GetType() int32 {
+	if m != nil {
+		return m.Type
+	}
+	return 0
+}
+
+func (m *MObjUpdateToc) GetObjInfo() []*PObj {
+	if m != nil {
+		return m.ObjInfo
+	}
+	return nil
+}
+
+// 进入地图初始化信息
+type MMapInfoToc struct {
+	FrameCount           uint32   `protobuf:"varint,1,opt,name=frame_count,json=frameCount,proto3" json:"frame_count,omitempty"`
+	ObjInfo              []*PObj  `protobuf:"bytes,3,rep,name=obj_info,json=objInfo,proto3" json:"obj_info,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *MMapInfoToc) Reset()         { *m = MMapInfoToc{} }
+func (m *MMapInfoToc) String() string { return proto.CompactTextString(m) }
+func (*MMapInfoToc) ProtoMessage()    {}
+func (*MMapInfoToc) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad8b26ed7a5e6aa6, []int{7}
+}
+
+func (m *MMapInfoToc) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_MMapInfoToc.Unmarshal(m, b)
+}
+func (m *MMapInfoToc) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_MMapInfoToc.Marshal(b, m, deterministic)
+}
+func (m *MMapInfoToc) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MMapInfoToc.Merge(m, src)
+}
+func (m *MMapInfoToc) XXX_Size() int {
+	return xxx_messageInfo_MMapInfoToc.Size(m)
+}
+func (m *MMapInfoToc) XXX_DiscardUnknown() {
+	xxx_messageInfo_MMapInfoToc.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MMapInfoToc proto.InternalMessageInfo
+
+func (m *MMapInfoToc) GetFrameCount() uint32 {
+	if m != nil {
+		return m.FrameCount
+	}
+	return 0
+}
+
+func (m *MMapInfoToc) GetObjInfo() []*PObj {
+	if m != nil {
+		return m.ObjInfo
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*PPosition)(nil), "net.p_position")
 	proto.RegisterType((*PPlayer)(nil), "net.p_player")
+	proto.RegisterType((*PObj)(nil), "net.p_obj")
+	proto.RegisterType((*MObjMoveTos)(nil), "net.m_obj_move_tos")
+	proto.RegisterType((*MObjMoveToc)(nil), "net.m_obj_move_toc")
+	proto.RegisterType((*MMapPlayerToc)(nil), "net.m_map_player_toc")
+	proto.RegisterType((*MObjUpdateToc)(nil), "net.m_obj_update_toc")
+	proto.RegisterType((*MMapInfoToc)(nil), "net.m_map_info_toc")
 }
 
 func init() {
@@ -124,14 +447,29 @@ func init() {
 }
 
 var fileDescriptor_ad8b26ed7a5e6aa6 = []byte{
-	// 143 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x29, 0x28, 0xca, 0x2f,
-	0xc9, 0xd7, 0xcf, 0x4b, 0x2d, 0xd1, 0x4f, 0x4f, 0xcc, 0x4d, 0xd5, 0x03, 0x73, 0x85, 0x98, 0xf3,
-	0x52, 0x4b, 0x94, 0x34, 0xb8, 0xb8, 0x0a, 0xe2, 0x0b, 0xf2, 0x8b, 0x33, 0x4b, 0x32, 0xf3, 0xf3,
-	0x84, 0x78, 0xb8, 0x18, 0x23, 0x24, 0x18, 0x15, 0x18, 0x35, 0x58, 0x83, 0x18, 0x23, 0x40, 0xbc,
-	0x48, 0x09, 0x26, 0x08, 0x2f, 0x52, 0x29, 0x98, 0x8b, 0xa3, 0x20, 0xbe, 0x20, 0x27, 0xb1, 0x32,
-	0xb5, 0x48, 0x48, 0x8a, 0x8b, 0x23, 0x00, 0xcc, 0xf2, 0x74, 0x01, 0x2b, 0xe7, 0x0c, 0x82, 0xf3,
-	0x85, 0xb4, 0xb9, 0x38, 0x02, 0xa0, 0xe6, 0x81, 0x35, 0x73, 0x1b, 0xf1, 0xeb, 0xe5, 0xa5, 0x96,
-	0xe8, 0x21, 0xac, 0x09, 0x82, 0x2b, 0x70, 0xe2, 0x8e, 0xe2, 0x84, 0xbb, 0x2d, 0x89, 0x0d, 0xcc,
-	0x34, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x75, 0xe3, 0x09, 0x1a, 0xaf, 0x00, 0x00, 0x00,
+	// 370 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x4d, 0x4b, 0xeb, 0x40,
+	0x14, 0x86, 0x49, 0xd2, 0xa4, 0xe9, 0xe9, 0xbd, 0xbd, 0x97, 0xa1, 0xf7, 0x12, 0x44, 0x50, 0x03,
+	0x42, 0x41, 0x48, 0x41, 0x57, 0x6e, 0xd5, 0x4d, 0x17, 0x42, 0x89, 0x9b, 0xd6, 0x4d, 0x98, 0x34,
+	0x53, 0x4d, 0x71, 0x3e, 0x48, 0xa6, 0x42, 0xff, 0x94, 0xbf, 0x51, 0xe6, 0x74, 0x9a, 0xda, 0x60,
+	0xc1, 0xdd, 0x79, 0xcf, 0xc7, 0xf3, 0x9e, 0x33, 0x09, 0x0c, 0x55, 0x25, 0xb5, 0x1c, 0x0b, 0xa6,
+	0xc7, 0x2f, 0x94, 0xb3, 0x04, 0x25, 0xf1, 0x04, 0xd3, 0xf1, 0x08, 0x40, 0x65, 0x4a, 0xd6, 0xa5,
+	0x2e, 0xa5, 0x20, 0xbf, 0xc0, 0x99, 0x45, 0xce, 0xb9, 0x33, 0xf2, 0x53, 0x67, 0x66, 0xd4, 0x3c,
+	0x72, 0xb7, 0x6a, 0x1e, 0x3f, 0x41, 0xa8, 0x32, 0xf5, 0x46, 0x37, 0xac, 0x22, 0x27, 0x10, 0x4e,
+	0x31, 0x9a, 0x3c, 0x60, 0x7b, 0x2f, 0x6d, 0x34, 0xb9, 0x82, 0x70, 0x6a, 0x79, 0x38, 0xdc, 0xbf,
+	0xfe, 0x93, 0x08, 0xa6, 0x93, 0xbd, 0x4d, 0xda, 0x34, 0xc4, 0x1f, 0x0e, 0xf8, 0x2a, 0x93, 0xf9,
+	0x8a, 0x0c, 0xc0, 0x2d, 0x0b, 0xeb, 0xed, 0x96, 0x05, 0x21, 0xd0, 0xd1, 0x1b, 0xc5, 0xac, 0x3f,
+	0xc6, 0x26, 0x27, 0x28, 0x67, 0x91, 0x87, 0x96, 0x18, 0x93, 0x0b, 0xf0, 0x94, 0xac, 0xa3, 0xce,
+	0xf7, 0x4e, 0xa6, 0x46, 0xfe, 0x43, 0x50, 0x6b, 0xaa, 0xd7, 0x75, 0xe4, 0x23, 0xcc, 0x2a, 0x72,
+	0x0a, 0xbd, 0xa2, 0xac, 0xd8, 0x02, 0x57, 0x0d, 0xb0, 0xb4, 0x4f, 0x90, 0x21, 0xf8, 0xb5, 0x62,
+	0xac, 0x88, 0xba, 0x58, 0xd9, 0x8a, 0x38, 0x81, 0x01, 0x37, 0xfb, 0x66, 0x5c, 0xbe, 0xb3, 0x4c,
+	0xcb, 0x16, 0xc5, 0x69, 0x51, 0xe2, 0xd7, 0x56, 0xff, 0x82, 0xfc, 0x83, 0xc0, 0xe8, 0xe6, 0x58,
+	0x5f, 0xe6, 0xab, 0x49, 0x71, 0x88, 0x71, 0xdb, 0xcb, 0xd8, 0x2b, 0xbd, 0xe3, 0x57, 0xc6, 0xb7,
+	0xf0, 0x97, 0x67, 0x9c, 0xee, 0xbe, 0x11, 0x7a, 0x5d, 0x42, 0x88, 0x5e, 0x62, 0x29, 0xed, 0x2c,
+	0xd8, 0x59, 0x99, 0xaf, 0xd2, 0xae, 0x71, 0x16, 0x4b, 0x19, 0x3f, 0x9a, 0x51, 0xd3, 0xb8, 0x56,
+	0x05, 0xd5, 0xdb, 0x35, 0x77, 0xef, 0xef, 0x7c, 0x79, 0xff, 0x43, 0x9c, 0x77, 0x0c, 0x37, 0x33,
+	0x37, 0x9b, 0x4d, 0x4c, 0x23, 0xc2, 0xce, 0xa0, 0xbf, 0xac, 0x28, 0x67, 0xd9, 0x42, 0xae, 0x85,
+	0x46, 0xe6, 0xef, 0x14, 0x30, 0x75, 0x6f, 0x32, 0x3f, 0x24, 0xdf, 0xf5, 0x9f, 0x7b, 0xcd, 0xaf,
+	0x9c, 0x07, 0x18, 0xde, 0x7c, 0x06, 0x00, 0x00, 0xff, 0xff, 0x5c, 0xc8, 0x9b, 0x6e, 0xde, 0x02,
+	0x00, 0x00,
 }

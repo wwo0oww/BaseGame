@@ -37,7 +37,7 @@ public class WSocket : MonoBehaviour
     }
     void trycon()
     {
-        if (Game.Instance.Status != GameStatus.Login) return;
+       // if (Game.Instance.Status != GameStatus.Login) return;
 
         try
         {
@@ -85,7 +85,8 @@ public class WSocket : MonoBehaviour
         {
             while (true)
             {
-                byte[] buffer = new byte[2048];
+                int nSize = 2048;
+                byte[] buffer = new byte[nSize];
                 //实际接收到的字节数
                 int r = socketSend.Receive(buffer, bodySize, SocketFlags.None);
                 //socketSend.Close();
@@ -98,8 +99,10 @@ public class WSocket : MonoBehaviour
                 {
 
                     Int16 Size = BitConverter.ToInt16(buffer, 0);
+                    if (Size > nSize) {
+                        buffer = new byte[Size];
+                    }
                     r = socketSend.Receive(buffer, Size, SocketFlags.None);
-
                     if (r != Size)
                     {
                         Debug.Log("错误的包体长度:" + r);
@@ -121,9 +124,9 @@ public class WSocket : MonoBehaviour
                         {
                             buffer2[i - msgIDSize] = buffer[i];
                         }
-                        IMessage IMperson = gen_proto.protoTypeMap[MsgID] as IMessage;
+                        IMessage IMsg = gen_proto.protoTypeMap[MsgID] as IMessage;
                         TestEchoACK p1 = new TestEchoACK();
-                        var t = IMperson.Descriptor.Parser.ParseFrom(buffer2);
+                        var t = IMsg.Descriptor.Parser.ParseFrom(buffer2);
                         var maction = new Dispatcher.MAction();
                         maction.action = rounter.GetHandler(t);
                         maction.msg = t;
